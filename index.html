@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Ledger Pro - Finance Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;500;700&display=swap');
+        body { font-family: 'Hind Siliguri', sans-serif; }
+        .card { transition: all 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen pb-20">
+
+    <div class="bg-indigo-700 text-white p-6 rounded-b-3xl shadow-lg" id="report-area">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-2xl font-bold text-center mb-6">সেন্ট্রাল ফিন্যান্স ড্যাশবোর্ড</h1>
+            <div class="grid grid-cols-3 gap-3 text-center">
+                <div class="bg-white/20 p-3 rounded-2xl">
+                    <p class="text-xs opacity-80">মোট কালেকশন</p>
+                    <h2 class="text-xl font-bold" id="total-collection">0</h2>
+                </div>
+                <div class="bg-white/20 p-3 rounded-2xl">
+                    <p class="text-xs opacity-80">মোট খরচ</p>
+                    <h2 class="text-xl font-bold" id="total-expense">0</h2>
+                </div>
+                <div class="bg-emerald-400 text-indigo-900 p-3 rounded-2xl">
+                    <p class="text-xs font-bold">ব্যালেন্স</p>
+                    <h2 class="text-xl font-bold" id="net-balance">0</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto p-4 space-y-6">
+        
+        <div class="flex justify-between gap-2 overflow-x-auto py-2">
+            <button onclick="toggleModal('studentModal')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm flex-shrink-0"><i class="fas fa-user-plus mr-2"></i>স্টুডেন্ট অ্যাড</button>
+            <button onclick="toggleModal('expenseModal')" class="bg-rose-500 text-white px-4 py-2 rounded-xl text-sm flex-shrink-0"><i class="fas fa-minus-circle mr-2"></i>খরচ অ্যাড</button>
+            <button onclick="downloadPNG()" class="bg-blue-500 text-white px-4 py-2 rounded-xl text-sm flex-shrink-0"><i class="fas fa-image mr-2"></i>PNG</button>
+            <button onclick="downloadPDF()" class="bg-orange-500 text-white px-4 py-2 rounded-xl text-sm flex-shrink-0"><i class="fas fa-file-pdf mr-2"></i>PDF</button>
+        </div>
+
+        <section>
+            <h3 class="font-bold text-gray-700 mb-3"><i class="fas fa-users mr-2 text-indigo-600"></i>স্টুডেন্ট লেজার</h3>
+            <div id="student-list" class="space-y-3">
+                </div>
+        </section>
+
+        <section>
+            <h3 class="font-bold text-gray-700 mb-3"><i class="fas fa-history mr-2 text-rose-500"></i>সাম্প্রতিক খরচ</h3>
+            <div id="expense-list" class="bg-white rounded-2xl shadow-sm p-4 text-sm">
+                </div>
+        </section>
+    </div>
+
+    <div id="studentModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl">
+            <h2 class="text-xl font-bold mb-4">নতুন স্টুডেন্ট</h2>
+            <input type="text" id="s-name" placeholder="নাম" class="w-full p-3 border rounded-xl mb-3 focus:outline-indigo-500">
+            <input type="text" id="s-roll" placeholder="রোল" class="w-full p-3 border rounded-xl mb-3 focus:outline-indigo-500">
+            <input type="text" id="s-phone" placeholder="ফোন" class="w-full p-3 border rounded-xl mb-4 focus:outline-indigo-500">
+            <div class="flex gap-2">
+                <button onclick="saveStudent()" class="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold">সেভ করুন</button>
+                <button onclick="toggleModal('studentModal')" class="flex-1 bg-gray-200 py-3 rounded-xl">বাতিল</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="expenseModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl">
+            <h2 class="text-xl font-bold mb-4 text-rose-600">খরচের হিসাব</h2>
+            <input type="text" id="e-purpose" placeholder="খরচের উদ্দেশ্য" class="w-full p-3 border rounded-xl mb-3 focus:outline-rose-500">
+            <input type="number" id="e-amount" placeholder="টাকার পরিমাণ" class="w-full p-3 border rounded-xl mb-4 focus:outline-rose-500">
+            <div class="flex gap-2">
+                <button onclick="saveExpense()" class="flex-1 bg-rose-600 text-white py-3 rounded-xl font-bold">খরচ সেভ</button>
+                <button onclick="toggleModal('expenseModal')" class="flex-1 bg-gray-200 py-3 rounded-xl">বাতিল</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="paymentModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl text-center">
+            <h2 id="pay-student-name" class="text-xl font-bold mb-2">স্টুডেন্ট পেমেন্ট</h2>
+            <input type="number" id="p-amount" placeholder="কত টাকা জমা" class="w-full p-4 text-2xl font-bold text-center border rounded-2xl mb-4 text-indigo-600">
+            <input type="hidden" id="p-id">
+            <div class="flex gap-2">
+                <button onclick="updatePayment()" class="flex-1 bg-emerald-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-emerald-200">টাকা জমা নিন</button>
+                <button onclick="toggleModal('paymentModal')" class="flex-1 bg-gray-200 py-4 rounded-2xl">বাতিল</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+        // CONFIGURATION
+        const supabaseUrl = 'YOUR_SUPABASE_URL';
+        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        // UI HELPERS
+        window.toggleModal = (id) => document.getElementById(id).classList.toggle('hidden');
+
+        // SAVE STUDENT
+        window.saveStudent = async () => {
+            const name = document.getElementById('s-name').value;
+            const roll = document.getElementById('s-roll').value;
+            const phone = document.getElementById('s-phone').value;
+            if(name) {
+                await supabase.from('students').insert([{ name, roll, phone }]);
+                location.reload();
+            }
+        };
+
+        // SAVE EXPENSE
+        window.saveExpense = async () => {
+            const purpose = document.getElementById('e-purpose').value;
+            const amount = document.getElementById('e-amount').value;
+            if(purpose && amount) {
+                await supabase.from('expenses').insert([{ purpose, amount: Number(amount) }]);
+                location.reload();
+            }
+        };
+
+        // OPEN PAYMENT MODAL
+        window.openPayment = (id, name) => {
+            document.getElementById('p-id').value = id;
+            document.getElementById('pay-student-name').innerText = name;
+            toggleModal('paymentModal');
+        };
+
+        // UPDATE PAYMENT
+        window.updatePayment = async () => {
+            const id = document.getElementById('p-id').value;
+            const extra = Number(document.getElementById('p-amount').value);
+            
+            const { data } = await supabase.from('students').select('paid_amount').eq('id', id).single();
+            const total = (data.paid_amount || 0) + extra;
+            
+            await supabase.from('students').update({ paid_amount: total }).eq('id', id);
+            location.reload();
+        };
+
+        // FETCH DATA
+        async function loadData() {
+            // Students
+            const { data: students } = await supabase.from('students').select('*').order('roll', {ascending: true});
+            const { data: expenses } = await supabase.from('expenses').select('*').order('created_at', {ascending: false});
+
+            let totalCol = 0;
+            let totalExp = 0;
+
+            const studentDiv = document.getElementById('student-list');
+            studentDiv.innerHTML = '';
+            students.forEach(s => {
+                totalCol += s.paid_amount;
+                studentDiv.innerHTML += `
+                    <div class="card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center" onclick="openPayment(${s.id}, '${s.name}')">
+                        <div>
+                            <h4 class="font-bold text-gray-800">${s.name} <span class="text-xs text-indigo-500 font-normal ml-1">#${s.roll}</span></h4>
+                            <p class="text-xs text-gray-500">${s.phone}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-bold text-indigo-600">${s.paid_amount} ৳</p>
+                            <p class="text-[10px] text-gray-400">ট্যাপ করে পেমেন্ট</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            const expDiv = document.getElementById('expense-list');
+            expDiv.innerHTML = '';
+            expenses.forEach(e => {
+                totalExp += e.amount;
+                expDiv.innerHTML += `
+                    <div class="flex justify-between py-2 border-b border-slate-50">
+                        <span class="text-gray-600">${e.purpose}</span>
+                        <span class="font-bold text-rose-500">-${e.amount} ৳</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('total-collection').innerText = totalCol + ' ৳';
+            document.getElementById('total-expense').innerText = totalExp + ' ৳';
+            document.getElementById('net-balance').innerText = (totalCol - totalExp) + ' ৳';
+        }
+
+        // DOWNLOADS
+        window.downloadPNG = () => {
+            html2canvas(document.querySelector("#report-area")).then(canvas => {
+                let link = document.createElement('a');
+                link.download = 'report.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        };
+
+        window.downloadPDF = () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            html2canvas(document.querySelector("#report-area")).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                doc.addImage(imgData, 'PNG', 10, 10, 190, 50);
+                doc.text("Finance Report - System Generated", 10, 80);
+                doc.save("finance_report.pdf");
+            });
+        };
+
+        loadData();
+    </script>
+</body>
+</html>
