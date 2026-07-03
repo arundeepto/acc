@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arundeepto Notice And Schedule App</title>
+    <title>Arundeepto</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root { --primary: #2c3e50; --accent: #2980b9; --bg: #f4f7f6; --white: #ffffff; }
@@ -22,7 +22,7 @@
         .btn-dl { background: #27ae60; color: white; }
         .btn-back { background: #95a5a6; color: white; }
 
-        /* Preview Styling - Professional Look */
+        /* Preview Styling */
         #preview-section { display: none; }
         #capture-area { background: white; padding: 30px; width: 450px; margin: auto; border: 1px solid #ddd; border-radius: 8px; }
         .header-box { text-align: center; border-bottom: 2px solid #2c3e50; padding-bottom: 10px; margin-bottom: 15px; }
@@ -37,7 +37,9 @@
         
         .notice-box-preview { margin-top: 20px; padding: 15px; background: #fffdf0; border-left: 5px solid #f1c40f; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .notice-header { color: #d35400; font-weight: bold; font-size: 14px; margin-bottom: 5px; }
-        .notice-content-preview { font-size: 13px; color: #444; line-height: 1.5; white-space: pre-wrap; }
+        
+        /* এখানে বোল্ড করা হয়েছে */
+        .notice-content-preview { font-size: 13px; color: #000; line-height: 1.5; white-space: pre-wrap; font-weight: bold; }
         
         .footer-credit { text-align: center; margin-top: 30px; font-size: 10px; color: #999; }
     </style>
@@ -92,7 +94,7 @@
                 <div id="res-notice" class="notice-content-preview"></div>
             </div>
 
-            <div class="footer-credit">Powered By: IT Team</div>
+            <div class="footer-credit">Powered By: IT Committee</div>
         </div>
         <button class="btn-dl" onclick="downloadImage()">Download HD Image</button>
         <button class="btn-back" onclick="hidePreview()">Back</button>
@@ -130,11 +132,9 @@
     }
 
     function showPreview() {
-        // Toggle visibility
         document.getElementById('prev-schedule').style.display = document.getElementById('inc-schedule').checked ? 'block' : 'none';
         document.getElementById('prev-notice').style.display = document.getElementById('inc-notice').checked ? 'block' : 'none';
         
-        // Data Set
         document.getElementById('res-date-schedule').innerText = document.getElementById('date-schedule').value;
         document.getElementById('res-date-notice').innerText = document.getElementById('date-notice').value;
         document.getElementById('res-notice').innerText = document.getElementById('notice').value;
