@@ -3,189 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedule Pro - With Notice</title>
+    <title>Arundeepto Notice And Schedule App</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #eef2f3; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); padding: 10px; margin: 0; }
-        .container { max-width: 500px; margin: 20px auto; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        h2 { color: var(--primary); text-align: center; margin-bottom: 20px; }
-        .input-group { background: #f9f9f9; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #eee; }
-        .row-label { font-weight: 600; color: var(--accent); display: block; margin-bottom: 8px; }
-        select, input, textarea { width: 100%; padding: 12px; margin: 5px 0; border: 1.5px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
-        textarea { height: 80px; resize: vertical; }
-        button { width: 100%; padding: 14px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; margin-top: 10px; font-size: 16px; transition: 0.3s; }
-        .btn-view { background: var(--accent); color: white; }
-        .btn-clear { background: #e74c3c; color: white; }
-        .btn-dl { background: #27ae60; color: white; }
-        .btn-back { background: #95a5a6; color: white; margin-top: 10px; }
-
-        #preview-section { display: none; }
-        #capture-area { background: white; padding: 30px; width: 450px; margin: auto; }
-        .logo-img { width: 80px; height: 80px; display: block; margin: 0 auto 10px auto; object-fit: contain; }
-        .title-txt { font-size: 20px; font-weight: bold; color: #2c3e50; text-align: center; margin: 5px 0; }
-        .batch-txt { font-size: 14px; color: #7f8c8d; text-align: center; margin-bottom: 15px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { background: #34495e; color: white; padding: 10px; font-size: 13px; }
-        td { border: 1px solid #bdc3c7; padding: 10px; text-align: center; font-size: 13px; color: #333; }
+        :root { --primary: #2c3e50; --accent: #2980b9; --bg: #f4f7f6; --white: #ffffff; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg); padding: 15px; margin: 0; color: #333; }
+        .container { max-width: 500px; margin: 20px auto; background: var(--white); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { color: var(--primary); text-align: center; margin-bottom: 20px; font-weight: 700; }
         
-        /* Notice Styling */
-        #notice-box { margin-top: 20px; padding: 10px; border: 1px dashed #e74c3c; border-radius: 8px; background: #fff5f5; display: none; }
-        .notice-title { color: #e74c3c; font-weight: bold; font-size: 14px; margin-bottom: 5px; }
-        .notice-content { font-size: 13px; color: #444; white-space: pre-wrap; }
-        .footer-text { text-align: right; margin-top: 20px; font-style: italic; font-size: 12px; color: #555; }
+        .toggle-group { display: flex; gap: 10px; margin-bottom: 15px; padding: 10px; background: #f0f4f8; border-radius: 8px; }
+        
+        .input-group { margin-bottom: 15px; }
+        .row-label { font-weight: 600; color: var(--accent); display: block; margin-bottom: 5px; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        
+        button { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px; transition: 0.3s; }
+        .btn-view { background: var(--primary); color: white; }
+        .btn-dl { background: #27ae60; color: white; }
+        .btn-back { background: #95a5a6; color: white; }
+
+        /* Preview Styling - Professional Look */
+        #preview-section { display: none; }
+        #capture-area { background: white; padding: 30px; width: 450px; margin: auto; border: 1px solid #ddd; border-radius: 8px; }
+        .header-box { text-align: center; border-bottom: 2px solid #2c3e50; padding-bottom: 10px; margin-bottom: 15px; }
+        .college-name { font-size: 22px; font-weight: bold; color: #2c3e50; }
+        .batch-name { font-size: 14px; color: #7f8c8d; margin-top: 5px; }
+        
+        .section-title { font-weight: bold; margin: 15px 0 5px 0; border-left: 4px solid #2980b9; padding-left: 8px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background: #f8f9fa; border: 1px solid #dee2e6; padding: 8px; font-size: 12px; }
+        td { border: 1px solid #dee2e6; padding: 8px; text-align: center; font-size: 12px; }
+        
+        .notice-box-preview { margin-top: 20px; padding: 15px; background: #fffdf0; border-left: 5px solid #f1c40f; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .notice-header { color: #d35400; font-weight: bold; font-size: 14px; margin-bottom: 5px; }
+        .notice-content-preview { font-size: 13px; color: #444; line-height: 1.5; white-space: pre-wrap; }
+        
+        .footer-credit { text-align: center; margin-top: 30px; font-size: 10px; color: #999; }
     </style>
 </head>
 <body>
 
 <div class="container" id="input-section">
-    <h2>Schedule Pro</h2>
-    <input type="text" id="date" placeholder="Date">
-    <div id="fields"></div>
+    <h2>Arundeepto</h2>
     
-    <div class="input-group">
-        <span class="row-label">Important Notice</span>
-        <textarea id="notice" placeholder="আপনার নোটিশটি এখানে লিখুন..." oninput="saveAll()"></textarea>
+    <div class="toggle-group">
+        <label><input type="checkbox" id="inc-schedule" checked> সিডিউল</label>
+        <label><input type="checkbox" id="inc-notice" checked> নোটিশ</label>
     </div>
 
-    <button class="btn-view" onclick="showPreview()">Preview Schedule</button>
-    <button class="btn-clear" onclick="clearAllData()">Clear All Data</button>
+    <div class="input-group">
+        <span class="row-label">সিডিউলের তারিখ</span>
+        <input type="date" id="date-schedule">
+    </div>
+
+    <div id="fields"></div>
+
+    <div class="input-group">
+        <span class="row-label">নোটিশের তারিখ</span>
+        <input type="date" id="date-notice">
+    </div>
+    <div class="input-group">
+        <span class="row-label">নোটিশের বিবরণ</span>
+        <textarea id="notice" placeholder="নোটিশ এখানে লিখুন..."></textarea>
+    </div>
+
+    <button class="btn-view" onclick="showPreview()">প্রিভিউ দেখুন</button>
 </div>
 
 <div id="preview-section">
     <div class="container">
         <div id="capture-area">
-            <img src="l.jpg" class="logo-img" alt="Logo" onerror="this.style.display='none'">
-            <div class="title-txt">Nilphamari Medical College</div>
-            <div class="batch-txt">Batch: Arundeepto (8th Batch)</div>
-            <div style="text-align: center; font-weight: bold; font-size: 16px; border-bottom: 2px solid #34495e; padding-bottom: 5px;">Class Schedule</div>
-            <p style="text-align:center; margin-top: 10px; font-size: 14px;"><strong>Date: </strong><span id="res-date"></span></p>
+            <div class="header-box">
+                <div class="college-name">Nilphamari Medical College</div>
+                <div class="batch-name">Arundeepto</div>
+            </div>
             
-            <table>
-                <thead><tr><th>Time</th><th>Subject</th><th>Topic</th><th>Teacher</th></tr></thead>
-                <tbody id="table-body"></tbody>
-            </table>
-
-            <div id="notice-box">
-                <div class="notice-title">📢 Notice Board</div>
-                <div id="res-notice" class="notice-content"></div>
+            <div id="prev-schedule">
+                <div class="section-title">Class Schedule | <span id="res-date-schedule"></span></div>
+                <table>
+                    <thead><tr><th>Time</th><th>Subject</th><th>Topic</th><th>Teacher</th></tr></thead>
+                    <tbody id="table-body"></tbody>
+                </table>
             </div>
 
-            <div class="footer-text">Powered By: IT Committee</div>
+            <div id="prev-notice" class="notice-box-preview">
+                <div class="notice-header">📢 Notice (Date: <span id="res-date-notice"></span>)</div>
+                <div id="res-notice" class="notice-content-preview"></div>
+            </div>
+
+            <div class="footer-credit">Powered By: IT Team</div>
         </div>
-        <button class="btn-dl" onclick="downloadImage()">Download as HD Image</button>
-        <button class="btn-back" onclick="hidePreview()">Back to Edit</button>
+        <button class="btn-dl" onclick="downloadImage()">Download HD Image</button>
+        <button class="btn-back" onclick="hidePreview()">Back</button>
     </div>
 </div>
 
 <script>
     const teacherData = {
         "Anatomy": ["Dr. Shamima Maam", "Dr. Farzana Maam", "Dr. Noman Sir", "Dr. Anup Sir", "Dr. Millat Sir"],
-        "Biochemistry": ["Dr. Mazed Sir", "Dr. Ayesha Maam", "Dr. Hadiuzzaman Sir", "Dr. Hasinur Sir", "Dr. Naima Maam", "Dr Irin Maam"],
-        "Physiology": ["Dr. Shila Maam", "Dr. Liza Maam", "Dr. Sara Maam", "Dr. Bipasha Maam", "Dr. Kashfi Maam", "Dr. Tritiya Maam"]
+        "Biochemistry": ["Dr. Mazed Sir", "Dr. Ayesha Maam", "Dr. Hadiuzzaman Sir", "Dr. Hasinur Sir", "Dr. Naima Maam"],
+        "Physiology": ["Dr. Shila Maam", "Dr. Liza Maam", "Dr. Sara Maam", "Dr. Bipasha Maam"]
     };
 
     const scheduleTimes = ["08:00 - 10:00", "10:30 - 12:30", "12:30 - 14:30"];
-
     const container = document.getElementById('fields');
+
     scheduleTimes.forEach((time, index) => {
         container.innerHTML += `
-            <div class="input-group">
+            <div class="input-group" style="background:#f9f9f9; padding:10px; border-radius:8px;">
                 <span class="row-label">${time}</span>
-                <select id="sub${index}" onchange="updateTeachers(${index}); saveAll()">
-                    <option value="">Select Subject</option>
-                    ${Object.keys(teacherData).map(sub => `<option value="${sub}">${sub}</option>`).join('')}
-                </select>
-                <input type="text" placeholder="Topic" id="top${index}" oninput="saveAll()">
-                <select id="teach${index}" onchange="saveAll()">
-                    <option value="">Select Teacher</option>
-                </select>
+                <select id="sub${index}" onchange="updateTeachers(${index})"><option value="">Subject</option>${Object.keys(teacherData).map(s => `<option value="${s}">${s}</option>`).join('')}</select>
+                <input type="text" placeholder="Topic" id="top${index}" style="margin-top:5px;">
+                <select id="teach${index}" style="margin-top:5px;"><option value="">Teacher</option></select>
             </div>
         `;
     });
 
-    function clearAllData() {
-        if (confirm("আপনি কি নিশ্চিত সব ডাটা মুছে ফেলতে চান?")) {
-            localStorage.removeItem('scheduleData');
-            location.reload(); 
-        }
-    }
-
     function updateTeachers(index) {
         const sub = document.getElementById(`sub${index}`).value;
         const teachSelect = document.getElementById(`teach${index}`);
-        teachSelect.innerHTML = '<option value="">Select Teacher</option>';
+        teachSelect.innerHTML = '<option value="">Teacher</option>';
         if (sub && teacherData[sub]) {
-            teacherData[sub].forEach(t => {
-                teachSelect.innerHTML += `<option value="${t}">${t}</option>`;
-            });
-        }
-    }
-
-    function saveAll() {
-        const data = { 
-            date: document.getElementById('date').value,
-            notice: document.getElementById('notice').value 
-        };
-        scheduleTimes.forEach((_, i) => {
-            data[`sub${i}`] = document.getElementById(`sub${i}`).value;
-            data[`top${i}`] = document.getElementById(`top${i}`).value;
-            data[`teach${i}`] = document.getElementById(`teach${i}`).value;
-        });
-        localStorage.setItem('scheduleData', JSON.stringify(data));
-    }
-
-    function loadAll() {
-        const saved = localStorage.getItem('scheduleData');
-        if (saved) {
-            const data = JSON.parse(saved);
-            document.getElementById('date').value = data.date || new Date().toLocaleDateString('en-GB');
-            document.getElementById('notice').value = data.notice || '';
-            scheduleTimes.forEach((_, i) => {
-                document.getElementById(`sub${i}`).value = data[`sub${i}`] || '';
-                updateTeachers(i);
-                document.getElementById(`teach${i}`).value = data[`teach${i}`] || '';
-                document.getElementById(`top${i}`).value = data[`top${i}`] || '';
-            });
-        } else {
-            document.getElementById('date').value = new Date().toLocaleDateString('en-GB');
+            teacherData[sub].forEach(t => teachSelect.innerHTML += `<option value="${t}">${t}</option>`);
         }
     }
 
     function showPreview() {
-        document.getElementById('input-section').style.display = 'none';
-        document.getElementById('preview-section').style.display = 'block';
-        document.getElementById('res-date').innerText = document.getElementById('date').value;
+        // Toggle visibility
+        document.getElementById('prev-schedule').style.display = document.getElementById('inc-schedule').checked ? 'block' : 'none';
+        document.getElementById('prev-notice').style.display = document.getElementById('inc-notice').checked ? 'block' : 'none';
         
-        // Notice Logic
-        const noticeText = document.getElementById('notice').value;
-        const noticeBox = document.getElementById('notice-box');
-        if(noticeText.trim() !== "") {
-            noticeBox.style.display = 'block';
-            document.getElementById('res-notice').innerText = noticeText;
-        } else {
-            noticeBox.style.display = 'none';
-        }
-
+        // Data Set
+        document.getElementById('res-date-schedule').innerText = document.getElementById('date-schedule').value;
+        document.getElementById('res-date-notice').innerText = document.getElementById('date-notice').value;
+        document.getElementById('res-notice').innerText = document.getElementById('notice').value;
+        
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = '';
         scheduleTimes.forEach((time, index) => {
             const sub = document.getElementById(`sub${index}`).value;
             const top = document.getElementById(`top${index}`).value;
             const teach = document.getElementById(`teach${index}`).value;
-            if(sub || top || teach) {
-                tbody.innerHTML += `<tr><td>${time}</td><td>${sub}</td><td>${top}</td><td>${teach}</td></tr>`;
-            }
+            if(sub || top || teach) tbody.innerHTML += `<tr><td>${time}</td><td>${sub}</td><td>${top}</td><td>${teach}</td></tr>`;
         });
-    }
 
-    function downloadImage() {
-        html2canvas(document.querySelector("#capture-area"), {scale: 3, backgroundColor: "#ffffff", useCORS: true}).then(canvas => {
-            const link = document.createElement('a');
-            link.download = 'Class_Schedule_Notice.png';
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-        });
+        document.getElementById('input-section').style.display = 'none';
+        document.getElementById('preview-section').style.display = 'block';
     }
 
     function hidePreview() {
@@ -193,7 +157,14 @@
         document.getElementById('preview-section').style.display = 'none';
     }
 
-    loadAll();
+    function downloadImage() {
+        html2canvas(document.querySelector("#capture-area"), {scale: 3}).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'Schedule_Notice.png';
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        });
+    }
 </script>
 </body>
 </html>
