@@ -265,13 +265,13 @@
                     await navigator.share({
                         files: [file],
                         title: 'Class Schedule',
-                        text: 'আজকের ক্লাসের সিডিউল এবং নোটিশ চেক করুন:'
+                        text: ' আগামী কালকের ক্লাসের সিডিউল এবং নোটিশ:'
                     });
                 } catch (err) {
                     console.error('Share failed: ', err);
                 }
             } else {
-                alert("দুঃখিত, আপনার ব্রাউজার সরাসরি শেয়ারিং সাপোর্ট করছে না। ডাউনলোড বাটন ব্যবহার করুন।");
+                alert("Use Download Button Please");
             }
         });
     }
