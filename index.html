@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arundeepto</title>
+    <title>Arundeepto - Schedule Maker</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root { --primary: #2c3e50; --lec: #d6eaf8; --prac: #d4efdf; --item: #f9ebea; --bg: #f4f7f6; }
@@ -24,12 +24,12 @@
         button { width: 100%; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px; transition: 0.3s; }
         .btn-view { background: var(--primary); color: white; }
         .btn-dl { background: #27ae60; color: white; }
+        .btn-share { background: #3498db; color: white; }
         .btn-back { background: #95a5a6; color: white; }
 
         #preview-section { display: none; }
         #capture-area { background: #ffffff; padding: 25px; width: 450px; margin: auto; border: 1px solid #eee; border-radius: 15px; position: relative; overflow: hidden;}
         
-        /* Darker and Top-Left Adjusted Stamp */
         .correction-badge { 
             display: none; 
             position: absolute; 
@@ -48,6 +48,7 @@
         }
 
         .header-box { text-align: center; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 2px dashed #dcdcdc; }
+        .logo-img { width: 80px; height: auto; margin-bottom: 10px; }
         .college-name { font-size: 18px; font-weight: 800; color: #2c3e50; text-transform: uppercase; }
         
         table { width: 100%; border-collapse: collapse; margin-top: 10px; border-radius: 8px; overflow: hidden; }
@@ -114,6 +115,7 @@
         <div id="capture-area">
             <div id="correction-stamp" class="correction-badge">সংশোধিত</div>
             <div class="header-box">
+                <img src="l.jpg" alt="Logo" class="logo-img">
                 <div class="college-name">Nilphamari Medical College</div>
                 <div style="font-size: 13px; font-style: italic;">Arundeepto</div>
             </div>
@@ -138,6 +140,7 @@
             <div class="footer-credit">© 2026 | Arundeepto | IT Team | Developed by: Munaf Wasif</div>
         </div>
         <button class="btn-dl" onclick="downloadImage()">Download Image</button>
+        <button class="btn-share" onclick="shareImage()">Share / WhatsApp</button>
         <button class="btn-back" onclick="hidePreview()">Back</button>
     </div>
 </div>
@@ -187,7 +190,12 @@
         const teachSelect = document.getElementById(`teach${index}`);
         teachSelect.innerHTML = '';
         if (sub && teacherData[sub]) {
-            teacherData[sub].forEach(t => teachSelect.innerHTML += `<option value="${t}">${t}</option>`);
+            teacherData[sub].forEach(t => {
+                let option = document.createElement('option');
+                option.value = t;
+                option.text = t;
+                teachSelect.appendChild(option);
+            });
         }
     }
 
@@ -243,6 +251,28 @@
             link.download = 'Schedule_Notice.png';
             link.href = canvas.toDataURL("image/png");
             link.click();
+        });
+    }
+
+    async function shareImage() {
+        const captureArea = document.querySelector("#capture-area");
+        const canvas = await html2canvas(captureArea, {scale: 3});
+        
+        canvas.toBlob(async (blob) => {
+            const file = new File([blob], "schedule.png", { type: "image/png" });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        files: [file],
+                        title: 'Class Schedule',
+                        text: 'আজকের ক্লাসের সিডিউল এবং নোটিশ চেক করুন:'
+                    });
+                } catch (err) {
+                    console.error('Share failed: ', err);
+                }
+            } else {
+                alert("দুঃখিত, আপনার ব্রাউজার সরাসরি শেয়ারিং সাপোর্ট করছে না। ডাউনলোড বাটন ব্যবহার করুন।");
+            }
         });
     }
 </script>
